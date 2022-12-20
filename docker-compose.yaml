@@ -1,0 +1,53 @@
+  GNU nano 2.3.1                                             Файл: docker-compose.yml                                                                                                
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: my_secret_password
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_user_pass
+    ports:
+      - "6033:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    restart: always
+  drupalone:
+    image: drupal:7
+    container_name: drupalone
+    ports:
+      - "9000:80"
+    volumes:
+      - /var/www/html/modules
+      - /var/www/html/profiles
+      - /var/www/html/themes
+      - /var/www/html/sites
+    restart: always
+  drupaltwo:
+    image: drupal:9
+    container_name:drupaltwo
+    ports:
+      - "9001:80"
+    volumes:
+      - /var/www/html/modules
+      - /var/www/html/profiles
+      - /var/www/html/themes
+      - /var/www/html/sites
+    restart: always
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    links:
+      - drupalone
+      - drupaltwo
+    depends_on:
+      - drupalone
+      - drupaltwo
+    restart: always
+volumes:
+  dbdata:
