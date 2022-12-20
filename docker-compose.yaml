@@ -25,17 +25,6 @@ services:
       - /var/www/html/themes
       - /var/www/html/sites
     restart: always
-  drupaltwo:
-    image: drupal:9
-    container_name:drupaltwo
-    ports:
-      - "9001:80"
-    volumes:
-      - /var/www/html/modules
-      - /var/www/html/profiles
-      - /var/www/html/themes
-      - /var/www/html/sites
-    restart: always
   nginx:
     build:
       context: .
