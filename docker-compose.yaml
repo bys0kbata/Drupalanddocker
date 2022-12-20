@@ -32,10 +32,8 @@ services:
       - "80:80"
     links:
       - drupalone
-      - drupaltwo
     depends_on:
       - drupalone
-      - drupaltwo
     restart: always
 volumes:
   dbdata:
