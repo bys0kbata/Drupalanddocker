@@ -14,7 +14,7 @@ services:
       - dbdata:/var/lib/mysql
     restart: always
   drupalone:
-    image: drupal:7
+    image: drupal:9
     container_name: drupalone
     ports:
       - "9000:80"
