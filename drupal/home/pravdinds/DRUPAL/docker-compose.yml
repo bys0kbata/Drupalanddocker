@@ -1,0 +1,58 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: my_secret_password
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_user_pass
+    ports:
+      - "6033:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    restart: always
+  drupalone:
+    image: drupal:9
+    container_name: drupalone
+    ports:
+      - "9000:80"
+    volumes:
+      - /var/www/html/modules
+      - /var/www/html/profiles
+      - /var/www/html/themes
+      - /var/www/html/sites
+    restart: always
+  drupaltwo:
+    image: drupal:7.53
+    container_name: drupaltwo
+    ports:
+      - "5000:80"
+    volumes:
+      - /var/www/html/sites
+    restart: always
+  nginxone:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginxone
+    ports:
+      - "80:80"
+    links:
+      - drupalone
+    depends_on:
+      - drupalone
+    restart: always
+  nginxtwo:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginxtwo
+    ports:
+      - "81:80"
+    links:
+      - drupaltwo
+    depends_on:
+      - drupaltwo
+    restart: always
+volumes:
+  dbdata:
